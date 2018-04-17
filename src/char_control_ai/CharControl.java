@@ -28,18 +28,20 @@ public class CharControl {
 	private boolean inputAdded;
 	
 	/**
-	 * Constructor for the CharControl class. It uses the first entry of the "inputs"
-	 * as the default action given to the character.
+	 * Constructor for the CharControl class. The default action of the
+	 * entity is set to null until trained with data.
 	 * 
 	 * @param otherObject: The character desired to act in an intelligent manner.
- * @param inputs: The list of desired method names to be called.
-	 * @param methods: The methods for the actions given in inputs.
+	 * @param inputs: The list of desired method names to be called.
 	 */
-	public CharControl(Object otherObject, String[] inputs, Method[] methods) {
+	public CharControl(Object otherObject, String[] inputs) {
 		this.character = otherObject;
 		this.inputAdded = false;
 		moveList = new ArrayList<MoveData>();
 		methodMap = new HashMap<String,Method>();
+		@SuppressWarnings("rawtypes")
+		Class c = otherObject.getClass();
+		Method[] methods = c.getDeclaredMethods();
 		for(int i=0;i<inputs.length;i++) {
 			for(int j=0;j<methods.length;j++) {
 				if(methods[j].toString().contains(inputs[i])) {
@@ -66,7 +68,7 @@ public class CharControl {
 					toAct.invoke(character);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 					Stage warning = new Stage();
-					Label warningLabel = new Label("Warning: Incorrect methods, inputs, or object provided to CharControl");
+					Label warningLabel = new Label("Warning: Incorrect inputs or object provided to CharControl");
 					Scene toShow = new Scene(warningLabel);
 					warning.setScene(toShow);
 					warning.show();

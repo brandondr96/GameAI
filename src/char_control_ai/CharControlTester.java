@@ -1,5 +1,4 @@
 package char_control_ai;
-import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.Queue;
 import javafx.animation.KeyFrame;
@@ -61,11 +60,8 @@ public class CharControlTester extends Application{
 		root.getChildren().addAll(player.getRect(),enemy.getRect());
 		
 		//Now to test the CharControl
-		@SuppressWarnings("rawtypes")
-		Class c = player.getClass();
 		String[] inputs = {"LEFT","RIGHT","UP","DOWN"};
-		Method[] methods = c.getDeclaredMethods();
-		enemyAI = new CharControl(enemy,inputs,methods);
+		enemyAI = new CharControl(enemy,inputs);
 	}
 	
 	/**
@@ -90,7 +86,7 @@ public class CharControlTester extends Application{
 	
 	/**
 	 * This simulates how input is received by the player,
-	 * as it different for every VOOGA implementation.
+	 * as it different for every implementation.
 	 * 
 	 * @param entity: The entity controlled by the player.
 	 * @param input: The input received from the input queue.
