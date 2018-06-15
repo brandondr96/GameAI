@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-
-import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Stage;
 /**
  * Class designed to give an entity the ability to learn and
  * mimic actions, similar to an AI. The entity should have a 
@@ -20,6 +16,8 @@ import javafx.stage.Stage;
  *
  */
 public class CharControl {
+	private static final String NULL_PLACEHOLDER = "NULL";
+	private static final String REFLECTION_WARNING = "Warning: Incorrect inputs or object provided to CharControl";
 	private Object character;
 	private List<MoveData> moveList;
 	private Map<String, Method> methodMap;
@@ -32,9 +30,9 @@ public class CharControl {
 	 * entity is set to null until trained with data.
 	 * 
 	 * @param otherObject: The character desired to act in an intelligent manner.
-	 * @param inputs: The list of desired method names to be called.
+	 * @param inputs: The desired method names to be called by the entity.
 	 */
-	public CharControl(Object otherObject, String[] inputs) {
+	public CharControl(Object otherObject, String... inputs) {
 		this.character = otherObject;
 		this.inputAdded = false;
 		moveList = new ArrayList<MoveData>();
@@ -49,10 +47,10 @@ public class CharControl {
 				}
 			}
 		}
-		MoveData defInit = new MoveData("NULL");
+		MoveData defInit = new MoveData(NULL_PLACEHOLDER);
 		moveList.add(defInit);
 		currentInput = defInit;
-		currentExecute = new MoveData("NULL");
+		currentExecute = new MoveData(NULL_PLACEHOLDER);
 	}
 	
 	/**
@@ -62,16 +60,17 @@ public class CharControl {
 	public void act() {
 		if(inputAdded) {
 			String action = currentExecute.getWord();
-			if(!currentExecute.getWord().equals("NULL")) {
+			if(!currentExecute.getWord().equals(NULL_PLACEHOLDER)) {
 				Method toAct = methodMap.get(action);
 				try {
-					toAct.invoke(character);
-				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-					Stage warning = new Stage();
-					Label warningLabel = new Label("Warning: Incorrect inputs or object provided to CharControl");
-					Scene toShow = new Scene(warningLabel);
-					warning.setScene(toShow);
-					warning.show();
+					if(toAct!=null) {
+						toAct.invoke(character);
+					}
+					else {
+						throw new CharControlException(REFLECTION_WARNING);
+					}
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | CharControlException e) {
+					System.out.println(e);
 				}
 			}
 			String nextExecute = currentExecute.nextInput();
@@ -96,10 +95,10 @@ public class CharControl {
 				currentExecute = data;
 			}
 		}
-		if(!currentExecute.getWord().equals("NULL")) {
+		if(!currentExecute.getWord().equals(NULL_PLACEHOLDER)) {
 			return action;
 		}
-		return "NULL";
+		return NULL_PLACEHOLDER;
 	}
 	
 	/**
@@ -161,6 +160,24 @@ public class CharControl {
 			}
 			return output;
 		}
+	}
+	/**
+	 * Exception to be caught if an error is found in the reflection
+	 * process for the acting entity.
+	 * 
+	 * @author Brandon Dalla Rosa
+	 *
+	 */
+	@SuppressWarnings("serial")
+	private class CharControlException extends Exception{
+		String toShow;
+		CharControlException(String message){
+			toShow = message;
+		}
+		public String toString() {
+			return "CharControlException: "+toShow;
+		}
+		
 	}
 
 }

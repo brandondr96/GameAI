@@ -11,6 +11,8 @@ import javafx.scene.shape.Rectangle;
  *
  */
 public class ExampleEntity {
+	private static final int CHAR_SIZE = 20;
+	private static final int EXAMPLE_STAGE_SIZE = 600;
 	private Rectangle rect;
 	
 	/**
@@ -23,43 +25,43 @@ public class ExampleEntity {
 	 * @param color: The color of the rectangle.
 	 */
 	public ExampleEntity(double xLoc, double yLoc, Color color) {
-		rect = new Rectangle(xLoc,yLoc,20,20);
+		rect = new Rectangle(xLoc,yLoc,CHAR_SIZE,CHAR_SIZE);
 		rect.setFill(color);
 	}
 	
 	/**
 	 * Method to move the entity left.
 	 */
-	public void LEFT() {
-		if(inBounds(rect.getX()-20,rect.getY())) {
-			rect.setX(rect.getX()-20);
+	public void moveLeft() {
+		if(inBounds(rect.getX()-CHAR_SIZE,rect.getY())) {
+			rect.setX(rect.getX()-CHAR_SIZE);
 		}
 	}
 	
 	/**
 	 * Method to move the entity right.
 	 */
-	public void RIGHT() {
-		if(inBounds(rect.getX()+20,rect.getY())) {
-			rect.setX(rect.getX()+20);
+	public void moveRight() {
+		if(inBounds(rect.getX()+CHAR_SIZE,rect.getY())) {
+			rect.setX(rect.getX()+CHAR_SIZE);
 		}
 	}
 	
 	/**
 	 * Method to move the entity up.
 	 */
-	public void UP() {
-		if(inBounds(rect.getX(),rect.getY()-20)) {
-			rect.setY(rect.getY()-20);
+	public void moveUp() {
+		if(inBounds(rect.getX(),rect.getY()-CHAR_SIZE)) {
+			rect.setY(rect.getY()-CHAR_SIZE);
 		}
 	}
 	
 	/**
 	 * Method to move the entity down.
 	 */
-	public void DOWN() {
-		if(inBounds(rect.getX(),rect.getY()+20)) {
-			rect.setY(rect.getY()+20);
+	public void moveDown() {
+		if(inBounds(rect.getX(),rect.getY()+CHAR_SIZE)) {
+			rect.setY(rect.getY()+CHAR_SIZE);
 		}
 	}
 	
@@ -81,7 +83,7 @@ public class ExampleEntity {
 	 * @return: The state of the rectangle.
 	 */
 	private boolean inBounds(double x, double y) {
-		if(x<600&&x>-20&&y>-20&&y<600) {
+		if(x<EXAMPLE_STAGE_SIZE&&x>-CHAR_SIZE&&y>-CHAR_SIZE&&y<EXAMPLE_STAGE_SIZE) {
 			return true;
 		}
 		else {
